@@ -173,7 +173,7 @@ class ConfigurableRetryStrategy implements RetryStrategyInterface
                 throw new InvalidArgumentException(sprintf('Multiplier must be greater than or equal to 1: "%s" given.', $multiplier));
             }
 
-            $delay = $delay * $multiplier ** RedeliveryStamp::getRetryCountFromEnvelope($envelope);
+            $delay = (int) ($delay * $multiplier ** RedeliveryStamp::getRetryCountFromEnvelope($envelope));
         }
 
         $maxDelay = array_key_exists('max_delay', $config) ? $config['max_delay'] : $this->defaultMaxDelay;
