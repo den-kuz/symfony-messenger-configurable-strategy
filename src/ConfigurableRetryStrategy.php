@@ -119,7 +119,7 @@ class ConfigurableRetryStrategy implements RetryStrategyInterface
             $delay = $this->defaultMaxDelay;
         }
 
-        return $delay;
+        return (int) $delay;
     }
 
     private function isRetryableForConfig(Envelope $envelope, ?\Throwable $throwable, array $config): bool
@@ -173,7 +173,7 @@ class ConfigurableRetryStrategy implements RetryStrategyInterface
                 throw new InvalidArgumentException(sprintf('Multiplier must be greater than or equal to 1: "%s" given.', $multiplier));
             }
 
-            $delay = (int) ($delay * $multiplier ** RedeliveryStamp::getRetryCountFromEnvelope($envelope));
+            $delay = $delay * $multiplier ** RedeliveryStamp::getRetryCountFromEnvelope($envelope);
         }
 
         $maxDelay = array_key_exists('max_delay', $config) ? $config['max_delay'] : $this->defaultMaxDelay;
@@ -188,7 +188,7 @@ class ConfigurableRetryStrategy implements RetryStrategyInterface
             }
         }
 
-        return $delay;
+        return (int) $delay;
     }
 
     private function isConfigMatched(Envelope $envelope, ?\Throwable $throwable, array $config): bool
