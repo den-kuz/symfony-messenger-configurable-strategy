@@ -119,7 +119,7 @@ class ConfigurableRetryStrategy implements RetryStrategyInterface
             $delay = $this->defaultMaxDelay;
         }
 
-        return $delay;
+        return (int) $delay;
     }
 
     private function isRetryableForConfig(Envelope $envelope, ?\Throwable $throwable, array $config): bool
@@ -188,7 +188,7 @@ class ConfigurableRetryStrategy implements RetryStrategyInterface
             }
         }
 
-        return $delay;
+        return (int) $delay;
     }
 
     private function isConfigMatched(Envelope $envelope, ?\Throwable $throwable, array $config): bool
