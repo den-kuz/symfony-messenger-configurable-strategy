@@ -16,5 +16,9 @@
     "autoload": {
         "psr-4": { "Symfony\\Component\\Messenger\\Retry\\Configurable\\": "src" }
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require-dev": {
+        "symplify/easy-ci": "^10.2"
+    }
 }
