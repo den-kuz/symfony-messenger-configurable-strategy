@@ -1,0 +1,50 @@
+name: phpstan
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  easy-ci-info:
+    name: "Get target PHP versions"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Get info from easy-ci"
+        id: easy-ci
+        uses: ./.github/actions/easy-ci-info
+
+    outputs:
+      php-versions-json: "${{ steps.easy-ci.outputs.php-versions-json }}"
+
+  phpstan:
+    needs: easy-ci-info
+    name: "Code static analysis {PHP: ${{ matrix.php-version }}, deps: ${{ matrix.dependencies-version }}}"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: "${{ fromJson(needs.easy-ci-info.outputs.php-versions-json) }}"
+        dependencies-version:
+          - "lowest"
+          - "highest"
+        include:
+          - { php-version: "8.0", dependencies-version: "highest" }
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v3
+
+      - name: "Build"
+        uses: ./.github/actions/build
+        with:
+          php-version: "${{ matrix.php-version }}"
+          dependencies-version: "${{ matrix.dependencies-version }}"
+
+      - name: "Code static analysis"
+        run: ./vendor/bin/phpstan analyse -c phpstan.neon --memory-limit 1G --error-format=github

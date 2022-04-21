@@ -1,0 +1,30 @@
+name: build
+description: "Build"
+
+inputs:
+  php-version:
+    description: "PHP version"
+    required: false
+    default: "8.0"
+
+  dependencies-version:
+    description: "Dependencies version"
+    required: false
+    default: "highest"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Install PHP ${{ inputs.php-version }}"
+      uses: shivammathur/setup-php@v2
+      with:
+        coverage: "none"
+        php-version: "${{ inputs.php-version }}"
+        extensions: "dom,filter,json,libxml,phar,tokenizer,xml,xmlwriter"
+        tools: "composer"
+
+    - name: "Install dependencies in ${{ inputs.dependencies-version }} versions"
+      uses: ramsey/composer-install@v2
+      with:
+        dependency-versions: "${{ inputs.dependencies-version }}"
+        composer-options: "--no-ansi --no-interaction --no-scripts --prefer-dist"

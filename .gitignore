@@ -1,2 +1,6 @@
-/composer.lock
+/.idea
 /vendor
+/auth.json
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+/composer.lock

@@ -1,0 +1,5 @@
+parameters:
+    phpVersion: 72000
+    level: 8
+    paths:
+        - src

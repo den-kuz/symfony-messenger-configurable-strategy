@@ -1,0 +1,34 @@
+name: easy-ci-info
+description: "Get info from easy ci"
+
+inputs:
+  php-version:
+    description: "PHP version"
+    required: false
+    default: "8.0"
+
+outputs:
+  php-versions-json:
+    description: "Array of target PHP versions, encoded in JSON"
+    value: "${{ steps.output-data.outputs.php-versions-json }}"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Install PHP ${{ inputs.php-version }} for using easy-ci"
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: "${{ inputs.php-version }}"
+        coverage: "none"
+
+    - name: "Install Composer dependencies for using easy setup"
+      uses: ramsey/composer-install@v2
+      with:
+        composer-options: "--no-ansi --no-interaction --no-scripts --prefer-dist"
+
+    - name: "Set target PHP versions"
+      id: output-data
+      shell: bash
+      run: |
+        vendor/bin/easy-ci php-versions-json;
+        echo "::set-output name=php-versions-json::$(vendor/bin/easy-ci php-versions-json)"
